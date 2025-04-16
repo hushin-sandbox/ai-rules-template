@@ -1,4 +1,9 @@
 {
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "file": ".vscode/instructions.md"
+    }
+  ],
   "chat.promptFilesLocations": {
     "docs/prompts": true
   }
