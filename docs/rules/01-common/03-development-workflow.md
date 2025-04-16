@@ -1,3 +1,1 @@
-## Development Workflow
-
-WIP
+<!-- ## Development Workflow -->
