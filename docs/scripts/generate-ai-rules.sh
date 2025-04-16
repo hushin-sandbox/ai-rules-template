@@ -22,7 +22,7 @@ remove_markdown_comments() {
   fi
 }
 
-# 既存の .clinerules ディレクトリを削除して新規作成
+# .clinerules ディレクトリにルールファイルを作成
 rm -rf "$ROOT_DIR/.clinerules"
 mkdir -p "$ROOT_DIR/.clinerules"
 
@@ -38,12 +38,12 @@ cd "$ROOT_DIR"
 
 echo "Rules files have been copied to .clinerules directory successfully."
 
+# .vscode/instructions.md を生成
 INSTRUCTIONS_FILE="$ROOT_DIR/.vscode/instructions.md"
 mkdir -p "$ROOT_DIR/.vscode"
-rm -f "$INSTRUCTIONS_FILE" # 既存の instructions.md を削除
-# ファイルを basename + path 順にソートして instructions.md に結合
-# ファイル名でソートしてから結合
+rm -f "$INSTRUCTIONS_FILE"
 cd "$ROOT_DIR/docs/rules"
+# ファイルを basename + path 順にソートして instructions.md に結合
 find . -type f -name "*.md" | sort -t / -k 3,3 -k 1,2 | while read file; do
   # echo "## $(basename "$file" .md) - $file" >> "$INSTRUCTIONS_FILE"
   # コメントを削除して結合
@@ -67,6 +67,14 @@ alwaysApply: true
 
 " > "$ROOT_DIR/.cursor/rules/common.mdc"
 
+# common ディレクトリのファイルを結合
+cd "$ROOT_DIR/docs/rules"
+find ./01-common -type f -name "*.md" | sort | while read file; do
+  # コメントを削除して結合
+  remove_markdown_comments "$file" | cat >> "$ROOT_DIR/.cursor/rules/common.mdc"
+  echo "" >> "$ROOT_DIR/.cursor/rules/common.mdc"
+done
+
 # frontend.mdc を生成
 echo "---
 description: Frontend React
@@ -75,14 +83,6 @@ alwaysApply: false
 ---
 
 " > "$ROOT_DIR/.cursor/rules/frontend.mdc"
-
-# common ディレクトリのファイルを結合
-cd "$ROOT_DIR/docs/rules"
-find ./01-common -type f -name "*.md" | sort | while read file; do
-  # コメントを削除して結合
-  remove_markdown_comments "$file" | cat >> "$ROOT_DIR/.cursor/rules/common.mdc"
-  echo "" >> "$ROOT_DIR/.cursor/rules/common.mdc"
-done
 
 # frontend ディレクトリのファイルを結合
 find ./02-frontend -type f -name "*.md" | sort | while read file; do
