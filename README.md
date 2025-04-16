@@ -29,7 +29,6 @@ fi
 # .gitignoreを追記
 if [ -f "$TEMP_DIR/repo/.gitignore" ]; then
   echo "" >> .gitignore
-  echo "# 追加された.gitignoreの内容" >> .gitignore
   cat "$TEMP_DIR/repo/.gitignore" >> .gitignore
   echo ".gitignore を更新しました"
 fi
