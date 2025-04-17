@@ -56,12 +56,13 @@ echo "Rules files have been combined to .vscode/instructions.md successfully."
 
 
 # .cursor/rules ディレクトリを作成
+rm -rf "$ROOT_DIR/.cursor/rules"
 mkdir -p "$ROOT_DIR/.cursor/rules"
 
 # common.mdc を生成
 echo "---
 description: common rule
-globs: 
+globs:
 alwaysApply: true
 ---
 
@@ -78,7 +79,7 @@ done
 # frontend.mdc を生成
 echo "---
 description: Frontend React
-globs: **/*.tsx
+globs: *.tsx,*.ts
 alwaysApply: false
 ---
 
