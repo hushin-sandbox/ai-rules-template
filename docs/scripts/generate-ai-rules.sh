@@ -55,40 +55,69 @@ cd "$ROOT_DIR"
 echo "Rules files have been combined to .vscode/instructions.md successfully."
 
 # .cursor/rules ディレクトリを作成
-rm -rf "$ROOT_DIR/.cursor/rules"
-mkdir -p "$ROOT_DIR/.cursor/rules"
+CURSOR_RULES_DIR="$ROOT_DIR/.cursor/rules"
+rm -rf "$CURSOR_RULES_DIR"
+mkdir -p "$CURSOR_RULES_DIR"
 
-# common.mdc を生成
-echo "---
-description: common rule
-globs:
-alwaysApply: true
+# MDCファイルを生成する関数
+generate_mdc_file() {
+  local output_file=$1
+  local description=$2
+  local globs=$3
+  local always_apply=$4
+  local rules_dir=$5
+
+  # ヘッダーの生成
+  cat >"$output_file" <<EOF
+---
+description: $description
+globs: $globs
+alwaysApply: $always_apply
 ---
 
-" >"$ROOT_DIR/.cursor/rules/common.mdc"
+EOF
 
-# common ディレクトリのファイルを結合
+  # コンテンツの追加
+  find "$rules_dir" -type f -name "*.md" | sort | while read -r file; do
+    remove_markdown_comments "$file" | cat >>"$output_file"
+    echo -e "\n" >>"$output_file" # Use echo -e for newline interpretation
+  done
+}
+
+# common.mdc を生成
 cd "$ROOT_DIR/docs/rules"
-find ./01-common -type f -name "*.md" | sort | while read file; do
-  # コメントを削除して結合
-  remove_markdown_comments "$file" | cat >>"$ROOT_DIR/.cursor/rules/common.mdc"
-  echo "" >>"$ROOT_DIR/.cursor/rules/common.mdc"
-done
+generate_mdc_file "$CURSOR_RULES_DIR/common.mdc" "common rule" "" "true" "./01-common"
 
 # frontend.mdc を生成
-echo "---
-description: Frontend React
-globs: *.tsx,*.ts
+generate_mdc_file "$CURSOR_RULES_DIR/frontend.mdc" "Frontend React" "*.tsx,*.ts" "false" "./02-frontend"
+cd "$ROOT_DIR"
+
+# プロンプトファイルをMDCファイルに変換する関数
+generate_prompt_mdc() {
+  local input_dir="docs/prompts"
+  local output_root_dir=".cursor/rules"
+
+  find "$input_dir" -type f -name "*.prompt.md" | while read -r file; do
+    local basename=$(basename "$file" .prompt.md)
+    local mdc_name="${basename}.mdc"
+
+    # 各ディレクトリにMDCファイルを生成
+    for output_dir in "$output_root_dir"; do
+      cat >"${output_dir}/${mdc_name}" <<EOF
+---
+description:
+globs:
 alwaysApply: false
 ---
 
-" >"$ROOT_DIR/.cursor/rules/frontend.mdc"
+EOF
+      remove_markdown_comments "$file" | cat >>"${output_dir}/${mdc_name}"
+      echo -e "\n" >>"${output_dir}/${mdc_name}"
+    done
+  done
+}
 
-# frontend ディレクトリのファイルを結合
-find ./02-frontend -type f -name "*.md" | sort | while read file; do
-  # コメントを削除して結合
-  remove_markdown_comments "$file" | cat >>"$ROOT_DIR/.cursor/rules/frontend.mdc"
-  echo "" >>"$ROOT_DIR/.cursor/rules/frontend.mdc"
-done
+# プロンプトファイルからMDCファイルを生成
+generate_prompt_mdc
 
 echo "Rules files have been generated in .cursor/rules/ directory successfully."
