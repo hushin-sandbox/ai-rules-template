@@ -12,7 +12,7 @@ remove_markdown_comments() {
     # ファイル間のコピーモード（入力ファイル → 出力ファイル）
     local input_file="$1"
     local output_file="$2"
-    perl -0777 -pe 's/<!--.*?-->//gs' "$input_file" > "$output_file"
+    perl -0777 -pe 's/<!--.*?-->//gs' "$input_file" >"$output_file"
   elif [ $# -eq 1 ]; then
     # ファイルから標準出力へのモード（入力ファイル → 標準出力）
     perl -0777 -pe 's/<!--.*?-->//gs' "$1"
@@ -47,13 +47,12 @@ cd "$ROOT_DIR/docs/rules"
 find . -type f -name "*.md" | sort -t / -k 3,3 -k 1,2 | while read file; do
   # echo "## $(basename "$file" .md) - $file" >> "$INSTRUCTIONS_FILE"
   # コメントを削除して結合
-  remove_markdown_comments "$file" | cat >> "$INSTRUCTIONS_FILE"
-  echo "" >> "$INSTRUCTIONS_FILE"
+  remove_markdown_comments "$file" | cat >>"$INSTRUCTIONS_FILE"
+  echo "" >>"$INSTRUCTIONS_FILE"
 done
 cd "$ROOT_DIR"
 
 echo "Rules files have been combined to .vscode/instructions.md successfully."
-
 
 # .cursor/rules ディレクトリを作成
 rm -rf "$ROOT_DIR/.cursor/rules"
@@ -66,14 +65,14 @@ globs:
 alwaysApply: true
 ---
 
-" > "$ROOT_DIR/.cursor/rules/common.mdc"
+" >"$ROOT_DIR/.cursor/rules/common.mdc"
 
 # common ディレクトリのファイルを結合
 cd "$ROOT_DIR/docs/rules"
 find ./01-common -type f -name "*.md" | sort | while read file; do
   # コメントを削除して結合
-  remove_markdown_comments "$file" | cat >> "$ROOT_DIR/.cursor/rules/common.mdc"
-  echo "" >> "$ROOT_DIR/.cursor/rules/common.mdc"
+  remove_markdown_comments "$file" | cat >>"$ROOT_DIR/.cursor/rules/common.mdc"
+  echo "" >>"$ROOT_DIR/.cursor/rules/common.mdc"
 done
 
 # frontend.mdc を生成
@@ -83,13 +82,13 @@ globs: *.tsx,*.ts
 alwaysApply: false
 ---
 
-" > "$ROOT_DIR/.cursor/rules/frontend.mdc"
+" >"$ROOT_DIR/.cursor/rules/frontend.mdc"
 
 # frontend ディレクトリのファイルを結合
 find ./02-frontend -type f -name "*.md" | sort | while read file; do
   # コメントを削除して結合
-  remove_markdown_comments "$file" | cat >> "$ROOT_DIR/.cursor/rules/frontend.mdc"
-  echo "" >> "$ROOT_DIR/.cursor/rules/frontend.mdc"
+  remove_markdown_comments "$file" | cat >>"$ROOT_DIR/.cursor/rules/frontend.mdc"
+  echo "" >>"$ROOT_DIR/.cursor/rules/frontend.mdc"
 done
 
 echo "Rules files have been generated in .cursor/rules/ directory successfully."
