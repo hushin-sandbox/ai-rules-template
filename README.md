@@ -13,8 +13,8 @@ echo "リポジトリをクローンしています..."
 git clone git@github.com:hushin-sandbox/ai-rules-template.git "$TEMP_DIR/repo"
 
 echo "指定されたフォルダをコピーしています..."
-cp -r "$TEMP_DIR/repo/docs" .
-echo "docs フォルダをコピーしました"
+cp -r "$TEMP_DIR/repo/ai" .
+echo "ai フォルダをコピーしました"
 
 cp -r "$TEMP_DIR/repo/.vscode" .
 echo ".vscode フォルダをコピーしました"
@@ -34,5 +34,5 @@ EOF
 ## 各種 AI ルールファイルを生成
 
 ```sh
-./docs/scripts/generate-ai-rules.sh
+./ai/scripts/generate-ai-rules.sh
 ```

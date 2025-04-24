@@ -26,8 +26,8 @@ remove_markdown_comments() {
 rm -rf "$ROOT_DIR/.clinerules"
 mkdir -p "$ROOT_DIR/.clinerules"
 
-# docs/rules 配下の .md ファイルをディレクトリ構造を維持したままコピーし、コメントを削除
-cd "$ROOT_DIR/docs/rules"
+# ai/rules 配下の .md ファイルをディレクトリ構造を維持したままコピーし、コメントを削除
+cd "$ROOT_DIR/ai/rules"
 find . -type f -name "*.md" | while read file; do
   # 親ディレクトリを作成
   mkdir -p "$(dirname "../../.clinerules/$file")"
@@ -42,7 +42,7 @@ echo "Rules files have been copied to .clinerules directory successfully."
 INSTRUCTIONS_FILE="$ROOT_DIR/.vscode/instructions.md"
 mkdir -p "$ROOT_DIR/.vscode"
 rm -f "$INSTRUCTIONS_FILE"
-cd "$ROOT_DIR/docs/rules"
+cd "$ROOT_DIR/ai/rules"
 # ファイルを basename + path 順にソートして instructions.md に結合
 find . -type f -name "*.md" | sort -t / -k 3,3 -k 1,2 | while read file; do
   # echo "## $(basename "$file" .md) - $file" >> "$INSTRUCTIONS_FILE"
@@ -85,7 +85,7 @@ EOF
 }
 
 # common.mdc を生成
-cd "$ROOT_DIR/docs/rules"
+cd "$ROOT_DIR/ai/rules"
 generate_mdc_file "$CURSOR_RULES_DIR/common.mdc" "common rule" "" "true" "./01-common"
 
 # frontend.mdc を生成
@@ -94,7 +94,7 @@ cd "$ROOT_DIR"
 
 # プロンプトファイルをMDCファイルに変換する関数
 generate_prompt_mdc() {
-  local input_dir="docs/prompts"
+  local input_dir="ai/prompts"
   local output_root_dir=".cursor/rules"
 
   find "$input_dir" -type f -name "*.prompt.md" | while read -r file; do
