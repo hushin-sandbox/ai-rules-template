@@ -29,18 +29,6 @@ XXX の機能を追加したいです。
 今回の作業内容で、コードのスケーラビリティと保守性について深く考察してください。
 ```
 
-### PR
-
-```
-今回の作業のコミット履歴を `GIT_PAGER=cat git log main..HEAD` で確認して。
-今回の作業を振り返りPull Requestの本文を簡潔にまとめて `ai-out/pr/(3桁連番)-(branch).md` に作って。
-参考にしたURLなども含めて。
-テンプレートは .github/pull_request_template.md を参照。
-
-その後私が本文用のファイルを確認して保存しますので、その後
-`gh pr create --title "title" --body "$(cat filename)"` でPRを作成してください。
-```
-
 ## doc
 
 ### 翻訳
