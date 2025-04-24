@@ -4,7 +4,7 @@
 
 ### ADR
 
-アーキテクチャ決定記録（ADR）を `docs/adr/(yyyy-MM-dd)-(slug).md` に保存する。
+アーキテクチャ決定記録（ADR）を `docs/adr/(yyyy-MM-dd)_(slug).md` に保存する。
 
 - 主要な依存関係の変更
 - アーキテクチャパターンの変更
