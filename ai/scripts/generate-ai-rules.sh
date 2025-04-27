@@ -94,12 +94,10 @@ EOF
 }
 
 # common.mdc を生成
-cd "$ROOT_DIR/ai/rules"
-generate_mdc_file "$CURSOR_RULES_DIR/common.mdc" "common rule" "" "true" "./01-common"
+generate_mdc_file "$CURSOR_RULES_DIR/common.mdc" "common rule" "" "true" "$ROOT_DIR/ai/rules/01-common"
 
 # frontend.mdc を生成
-generate_mdc_file "$CURSOR_RULES_DIR/frontend.mdc" "Frontend React" "*.tsx,*.ts" "false" "./02-frontend"
-cd "$ROOT_DIR"
+generate_mdc_file "$CURSOR_RULES_DIR/frontend.mdc" "Frontend React" "*.tsx,*.ts" "false" "$ROOT_DIR/ai/rules/02-frontend"
 
 # プロンプトファイルをMDCファイルに変換する関数
 generate_prompt_mdc() {
