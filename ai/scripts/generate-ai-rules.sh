@@ -22,21 +22,30 @@ remove_markdown_comments() {
   fi
 }
 
-# .clinerules ディレクトリにルールファイルを作成
-rm -rf "$ROOT_DIR/.clinerules"
-mkdir -p "$ROOT_DIR/.clinerules"
+# ルールファイルをディレクトリにコピーする関数
+generate_rules_files() {
+  local output_dir="$1"
+  
+  # 出力ディレクトリを初期化
+  rm -rf "$ROOT_DIR/$output_dir"
+  mkdir -p "$ROOT_DIR/$output_dir"
+  
+  # ai/rules 配下の .md ファイルをディレクトリ構造を維持したままコピーし、コメントを削除
+  cd "$ROOT_DIR/ai/rules"
+  find . -type f -name "*.md" | while read file; do
+    # 親ディレクトリを作成
+    mkdir -p "$(dirname "../../$output_dir/$file")"
+    # コメントを削除してコピー
+    remove_markdown_comments "$file" "../../$output_dir/$file"
+  done
+  cd "$ROOT_DIR"
+  
+  echo "Rules files have been copied to $output_dir directory successfully."
+}
 
-# ai/rules 配下の .md ファイルをディレクトリ構造を維持したままコピーし、コメントを削除
-cd "$ROOT_DIR/ai/rules"
-find . -type f -name "*.md" | while read file; do
-  # 親ディレクトリを作成
-  mkdir -p "$(dirname "../../.clinerules/$file")"
-  # コメントを削除してコピー
-  remove_markdown_comments "$file" "../../.clinerules/$file"
-done
-cd "$ROOT_DIR"
-
-echo "Rules files have been copied to .clinerules directory successfully."
+# .clinerules と .roo/rules にルールファイルを生成
+generate_rules_files ".clinerules"
+generate_rules_files ".roo/rules"
 
 # .vscode/instructions.md を生成
 INSTRUCTIONS_FILE="$ROOT_DIR/.vscode/instructions.md"
